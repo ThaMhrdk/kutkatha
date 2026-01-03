@@ -23,7 +23,12 @@ class SchedulePolicy
      */
     public function view(User $user, Schedule $schedule): bool
     {
-        return $user->psikolog && $user->psikolog->id === $schedule->psikolog_id;
+        // Load relasi psikolog jika belum ter-load
+        $psikolog = $user->relationLoaded('psikolog')
+            ? $user->psikolog
+            : $user->psikolog()->first();
+
+        return $psikolog && $psikolog->id === $schedule->psikolog_id;
     }
 
     /**
@@ -31,7 +36,16 @@ class SchedulePolicy
      */
     public function create(User $user): bool
     {
-        return $user->role === 'psikolog' && $user->psikolog;
+        if ($user->role !== 'psikolog') {
+            return false;
+        }
+
+        // Load relasi psikolog jika belum ter-load
+        $psikolog = $user->relationLoaded('psikolog')
+            ? $user->psikolog
+            : $user->psikolog()->first();
+
+        return $psikolog !== null;
     }
 
     /**
@@ -39,7 +53,12 @@ class SchedulePolicy
      */
     public function update(User $user, Schedule $schedule): bool
     {
-        return $user->psikolog && $user->psikolog->id === $schedule->psikolog_id;
+        // Load relasi psikolog jika belum ter-load
+        $psikolog = $user->relationLoaded('psikolog')
+            ? $user->psikolog
+            : $user->psikolog()->first();
+
+        return $psikolog && $psikolog->id === $schedule->psikolog_id;
     }
 
     /**
@@ -47,6 +66,11 @@ class SchedulePolicy
      */
     public function delete(User $user, Schedule $schedule): bool
     {
-        return $user->psikolog && $user->psikolog->id === $schedule->psikolog_id;
+        // Load relasi psikolog jika belum ter-load
+        $psikolog = $user->relationLoaded('psikolog')
+            ? $user->psikolog
+            : $user->psikolog()->first();
+
+        return $psikolog && $psikolog->id === $schedule->psikolog_id;
     }
 }

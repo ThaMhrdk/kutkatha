@@ -39,7 +39,8 @@ class ArticlePolicy
      */
     public function update(User $user, Article $article): bool
     {
-        return $user->id === $article->author_id;
+        // Pastikan perbandingan dengan tipe data yang sama
+        return (int) $user->id === (int) $article->author_id;
     }
 
     /**
@@ -47,6 +48,7 @@ class ArticlePolicy
      */
     public function delete(User $user, Article $article): bool
     {
-        return $user->id === $article->author_id;
+        // Pastikan perbandingan dengan tipe data yang sama
+        return (int) $user->id === (int) $article->author_id;
     }
 }
