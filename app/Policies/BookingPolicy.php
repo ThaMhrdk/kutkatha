@@ -13,12 +13,12 @@ class BookingPolicy
     public function view(User $user, Booking $booking): bool
     {
         // User owns the booking
-        if ($booking->user_id === $user->id) {
+        if ((int)$booking->user_id === (int)$user->id) {
             return true;
         }
 
         // Psikolog owns the schedule
-        if ($user->psikolog && $booking->schedule->psikolog_id === $user->psikolog->id) {
+        if ($user->psikolog && (int)$booking->schedule->psikolog_id === (int)$user->psikolog->id) {
             return true;
         }
 
@@ -36,12 +36,12 @@ class BookingPolicy
     public function update(User $user, Booking $booking): bool
     {
         // User can update their own pending booking
-        if ($booking->user_id === $user->id && $booking->status === 'pending') {
+        if ((int)$booking->user_id === (int)$user->id && $booking->status === 'pending') {
             return true;
         }
 
         // Psikolog can update booking status
-        if ($user->psikolog && $booking->schedule->psikolog_id === $user->psikolog->id) {
+        if ($user->psikolog && (int)$booking->schedule->psikolog_id === (int)$user->psikolog->id) {
             return true;
         }
 
@@ -54,7 +54,7 @@ class BookingPolicy
     public function delete(User $user, Booking $booking): bool
     {
         // User can delete their own booking if pending or cancelled
-        return $booking->user_id === $user->id
+        return (int)$booking->user_id === (int)$user->id
             && in_array($booking->status, ['pending', 'cancelled']);
     }
 
@@ -64,7 +64,7 @@ class BookingPolicy
     public function cancel(User $user, Booking $booking): bool
     {
         // Only owner can cancel and only if not completed
-        return $booking->user_id === $user->id && $booking->canBeCancelled();
+        return (int)$booking->user_id === (int)$user->id && $booking->canBeCancelled();
     }
 
     /**
@@ -74,7 +74,7 @@ class BookingPolicy
     {
         // Only psikolog of the schedule can confirm
         return $user->psikolog
-            && $booking->schedule->psikolog_id === $user->psikolog->id
+            && (int)$booking->schedule->psikolog_id === (int)$user->psikolog->id
             && $booking->status === 'pending';
     }
 
@@ -84,12 +84,12 @@ class BookingPolicy
     public function manage(User $user, Booking $booking): bool
     {
         // User owns the booking
-        if ($booking->user_id === $user->id) {
+        if ((int)$booking->user_id === (int)$user->id) {
             return true;
         }
 
         // Psikolog owns the schedule
-        if ($user->psikolog && $booking->schedule->psikolog_id === $user->psikolog->id) {
+        if ($user->psikolog && (int)$booking->schedule->psikolog_id === (int)$user->psikolog->id) {
             return true;
         }
 

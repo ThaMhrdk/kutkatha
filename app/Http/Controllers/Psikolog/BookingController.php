@@ -30,7 +30,8 @@ class BookingController extends Controller
     public function show(Booking $booking)
     {
         $psikolog = Auth::user()->psikolog;
-        if ($booking->schedule->psikolog_id !== $psikolog->id) {
+        // Use == instead of !== for type-safe comparison (int vs string from DB)
+        if ((int)$booking->schedule->psikolog_id != (int)$psikolog->id) {
             abort(403, 'Unauthorized');
         }
 
@@ -42,7 +43,8 @@ class BookingController extends Controller
     public function confirm(Booking $booking)
     {
         $psikolog = Auth::user()->psikolog;
-        if ($booking->schedule->psikolog_id !== $psikolog->id) {
+        // Use == instead of !== for type-safe comparison (int vs string from DB)
+        if ((int)$booking->schedule->psikolog_id != (int)$psikolog->id) {
             abort(403, 'Unauthorized');
         }
 
@@ -89,7 +91,8 @@ class BookingController extends Controller
     public function reject(Request $request, Booking $booking)
     {
         $psikolog = Auth::user()->psikolog;
-        if ($booking->schedule->psikolog_id !== $psikolog->id) {
+        // Use == instead of !== for type-safe comparison (int vs string from DB)
+        if ((int)$booking->schedule->psikolog_id != (int)$psikolog->id) {
             abort(403, 'Unauthorized');
         }
 
