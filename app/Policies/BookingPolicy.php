@@ -49,6 +49,16 @@ class BookingPolicy
     }
 
     /**
+     * Determine whether the user can delete the booking.
+     */
+    public function delete(User $user, Booking $booking): bool
+    {
+        // User can delete their own booking if pending or cancelled
+        return $booking->user_id === $user->id
+            && in_array($booking->status, ['pending', 'cancelled']);
+    }
+
+    /**
      * Determine whether the user can cancel the booking.
      */
     public function cancel(User $user, Booking $booking): bool

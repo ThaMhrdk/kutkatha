@@ -118,9 +118,8 @@ class ArticleController extends ApiController
     public function update(Request $request, Article $article): JsonResponse
     {
         try {
-            if ($article->author_id !== Auth::id()) {
-                return $this->error('Unauthorized.', 403);
-            }
+            // Authorization handled by policy
+            $this->authorize('update', $article);
 
             $request->validate([
                 'title' => 'sometimes|string|max:255',
@@ -164,9 +163,8 @@ class ArticleController extends ApiController
      */
     public function destroy(Article $article): JsonResponse
     {
-        if ($article->author_id !== Auth::id()) {
-            return $this->error('Unauthorized.', 403);
-        }
+        // Authorization handled by policy
+        $this->authorize('delete', $article);
 
         $article->delete();
 
