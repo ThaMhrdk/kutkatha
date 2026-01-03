@@ -5,98 +5,110 @@ namespace App\Http\Controllers;
 use App\Models\ForumTopic;
 use App\Models\ForumPost;
 use App\Models\ForumComment;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ForumController extends Controller
 {
-    public function index(Request $request)
+    public function __construct()
     {
-        $categories = ForumTopic::select('category')
-            ->distinct()
-            ->whereNotNull('category')
-            ->pluck('category');
+        $this->middleware('auth');
+    }
 
-        $query = ForumTopic::with('user')
-            ->withCount('posts');
+    public function index()
+    {
+        // Get unique categories from topics
+        $categories = ForumTopic::distinct()->pluck('category')->filter()->values();
 
-        if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
-        }
-
-        if ($request->filled('category')) {
-            $query->where('category', $request->category);
-        }
-
-        $pinnedTopics = (clone $query)->where('is_pinned', true)->get();
-
-        $topics = (clone $query)->where('is_pinned', false)
+        // Get pinned topics
+        $pinnedTopics = ForumTopic::with('user')
+            ->withCount('posts')
+            ->where('is_pinned', true)
             ->latest()
-            ->paginate(15);
-
-        $totalTopics = ForumTopic::count();
-        $totalPosts = ForumPost::count();
-        $activeMembers = User::whereHas('forumTopics')->orWhereHas('forumPosts')->count();
-
-        $topContributors = User::withCount(['forumTopics', 'forumPosts'])
-            ->orderByRaw('forum_topics_count + forum_posts_count DESC')
-            ->take(5)
             ->get();
 
-        return view('forum.index', compact('categories', 'topics', 'pinnedTopics', 'totalTopics', 'totalPosts', 'activeMembers', 'topContributors'));
+        // Get regular topics (excluding pinned)
+        $query = ForumTopic::with('user')
+            ->withCount('posts')
+            ->where('is_pinned', false);
+
+        // Filter by search
+        if (request('search')) {
+            $query->where('title', 'like', '%' . request('search') . '%');
+        }
+
+        // Filter by category
+        if (request('category')) {
+            $query->where('category', request('category'));
+        }
+
+        $topics = $query->latest()->paginate(15);
+
+        // Stats for sidebar
+        $totalTopics = ForumTopic::count();
+        $totalPosts = ForumPost::count();
+        $activeMembers = ForumTopic::distinct('user_id')->count('user_id');
+
+        // Top contributors - get users with most forum posts
+        $topContributors = \App\Models\User::select('users.*')
+            ->selectRaw('(SELECT COUNT(*) FROM forum_posts WHERE forum_posts.user_id = users.id) as posts_count')
+            ->whereRaw('(SELECT COUNT(*) FROM forum_posts WHERE forum_posts.user_id = users.id) > 0')
+            ->orderByDesc('posts_count')
+            ->limit(5)
+            ->get();
+
+        return view('forum.index', compact('topics', 'categories', 'pinnedTopics', 'totalTopics', 'totalPosts', 'activeMembers', 'topContributors'));
     }
 
     public function create()
     {
-        $categories = ['Kecemasan', 'Depresi', 'Stres', 'Hubungan', 'Karir', 'Keluarga', 'Tips & Motivasi', 'Lainnya'];
-        return view('forum.create', compact('categories'));
+        return view('forum.create');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category' => 'required|string',
-            'description' => 'required|string|min:20',
-            'is_anonymous' => 'boolean',
+            'description' => 'nullable|string',
         ]);
 
-        $topic = ForumTopic::create([
-            'user_id' => Auth::id(),
-            'title' => $request->title,
-            'slug' => Str::slug($request->title) . '-' . Str::random(5),
-            'category' => $request->category,
-            'description' => $request->description,
-            'is_anonymous' => $request->boolean('is_anonymous'),
-        ]);
+        $validated['slug'] = Str::slug($validated['title']);
+        $validated['user_id'] = auth()->id();
 
-        return redirect()->route('forum.topic', $topic)
-            ->with('success', 'Topik berhasil dibuat.');
+        ForumTopic::create($validated);
+
+        return redirect()->route('forum.index')
+            ->with('success', 'Topik forum berhasil dibuat');
     }
 
     public function topic(ForumTopic $topic)
     {
-        $topic->increment('views_count');
         $topic->load('user');
 
+        // Get paginated posts for this topic
         $posts = ForumPost::with(['user', 'comments.user'])
             ->where('topic_id', $topic->id)
             ->latest()
             ->paginate(15);
 
-        $relatedTopics = ForumTopic::where('category', $topic->category)
+        // Get related topics (same category, excluding current)
+        $relatedTopics = ForumTopic::withCount('posts')
+            ->where('category', $topic->category)
             ->where('id', '!=', $topic->id)
-            ->take(5)
+            ->latest()
+            ->limit(5)
             ->get();
+
+        // Increment views count
+        $topic->increment('views_count');
 
         return view('forum.topic', compact('topic', 'posts', 'relatedTopics'));
     }
 
     public function showPost(ForumPost $post)
     {
-        $post->load(['topic', 'user']);
+        $post->load(['author', 'topic', 'comments.author']);
 
         return view('forum.post', compact('post'));
     }
@@ -108,41 +120,30 @@ class ForumController extends Controller
 
     public function storePost(Request $request, ForumTopic $topic)
     {
-        $request->validate([
-            'content' => 'required|string|min:10',
-            'is_anonymous' => 'boolean',
+        $validated = $request->validate([
+            'content' => 'required|string',
         ]);
 
-        ForumPost::create([
-            'topic_id' => $topic->id,
-            'user_id' => Auth::id(),
-            'content' => $request->content,
-            'is_anonymous' => $request->boolean('is_anonymous'),
-        ]);
+        $validated['topic_id'] = $topic->id;
+        $validated['user_id'] = auth()->id();
+
+        ForumPost::create($validated);
 
         return redirect()->route('forum.topic', $topic)
-            ->with('success', 'Balasan berhasil ditambahkan.');
+            ->with('success', 'Balasan berhasil dibuat');
     }
 
     public function storeComment(Request $request, ForumPost $post)
     {
-        $request->validate([
-            'content' => 'required|string|min:3',
-            'is_anonymous' => 'boolean',
-            'parent_id' => 'nullable|exists:forum_comments,id',
+        $validated = $request->validate([
+            'content' => 'required|string',
         ]);
 
-        $isPsikologAnswer = Auth::user()->isPsikolog();
+        $validated['post_id'] = $post->id;
+        $validated['user_id'] = auth()->id();
 
-        ForumComment::create([
-            'post_id' => $post->id,
-            'user_id' => Auth::id(),
-            'parent_id' => $request->parent_id,
-            'content' => $request->content,
-            'is_anonymous' => $request->boolean('is_anonymous'),
-            'is_psikolog_answer' => $isPsikologAnswer,
-        ]);
+        ForumComment::create($validated);
 
-        return back()->with('success', 'Komentar berhasil ditambahkan.');
+        return back()->with('success', 'Komentar berhasil ditambahkan');
     }
 }

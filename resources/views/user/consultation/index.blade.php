@@ -68,7 +68,7 @@
                         <a href="{{ route('user.consultation.show', $consultation) }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-eye me-2"></i>Detail
                         </a>
-                        @if(!$consultation->isCompleted() && $consultation->booking->schedule->consultation_type == 'chat')
+                        @if(!$consultation->isCompleted() && in_array($consultation->booking->schedule->consultation_type, ['chat', 'online']))
                             <a href="{{ route('user.consultation.chat', $consultation) }}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-comments me-2"></i>Buka Chat
                             </a>
@@ -83,7 +83,7 @@
             </div>
             @endforeach
 
-            {{ $consultations->links() }}
+            <x-pagination :paginator="$consultations" entityName="consultations" />
         @else
             <div class="text-center py-5">
                 <i class="fas fa-comments fa-4x text-muted mb-3"></i>

@@ -68,7 +68,7 @@
                 </table>
             </div>
 
-            {{ $articles->links() }}
+            <x-pagination :paginator="$articles" entityName="articles" />
         @else
             <div class="text-center py-5">
                 <i class="fas fa-newspaper fa-4x text-muted mb-3"></i>

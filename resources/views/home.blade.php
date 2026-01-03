@@ -51,7 +51,7 @@
             <div class="col-md-4">
                 <div class="card h-100 text-center p-4">
                     <div class="card-body">
-                        <div class="rounded-circle bg-primary-custom bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <div class="rounded-circle bg-primary-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                             <i class="fas fa-video fa-2x text-primary-custom"></i>
                         </div>
                         <h5 class="card-title">Konsultasi Online</h5>
@@ -64,7 +64,7 @@
             <div class="col-md-4">
                 <div class="card h-100 text-center p-4">
                     <div class="card-body">
-                        <div class="rounded-circle bg-secondary-custom bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <div class="rounded-circle bg-secondary-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                             <i class="fas fa-hospital fa-2x text-success"></i>
                         </div>
                         <h5 class="card-title">Konsultasi Tatap Muka</h5>
@@ -77,7 +77,7 @@
             <div class="col-md-4">
                 <div class="card h-100 text-center p-4">
                     <div class="card-body">
-                        <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <div class="rounded-circle bg-warning-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                             <i class="fas fa-comments fa-2x text-warning"></i>
                         </div>
                         <h5 class="card-title">Chat Konseling</h5>

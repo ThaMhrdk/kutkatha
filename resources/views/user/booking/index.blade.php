@@ -39,9 +39,9 @@
                             <td>{{ $booking->schedule->date->format('d M Y') }}</td>
                             <td>{{ $booking->schedule->formatted_time }}</td>
                             <td>
-                                @if($booking->schedule->consultation_type == 'online')
+                                @if($booking->schedule->type == 'online')
                                     <span class="badge bg-primary">Online</span>
-                                @elseif($booking->schedule->consultation_type == 'offline')
+                                @elseif($booking->schedule->type == 'offline')
                                     <span class="badge bg-success">Offline</span>
                                 @else
                                     <span class="badge bg-info">Chat</span>
@@ -65,6 +65,21 @@
                                             <i class="fas fa-credit-card"></i>
                                         </a>
                                     @endif
+                                    @if($booking->status === 'confirmed' && $booking->isPaid() && $booking->consultation)
+                                        @if($booking->schedule->type == 'chat')
+                                        <a href="{{ route('user.consultation.chat', $booking->consultation) }}" class="btn btn-sm btn-success" title="Buka Chat">
+                                            <i class="fas fa-comments"></i>
+                                        </a>
+                                        @elseif($booking->schedule->type == 'online')
+                                        <a href="{{ route('user.consultation.chat', $booking->consultation) }}" class="btn btn-sm btn-info" title="Lihat Link Meeting">
+                                            <i class="fas fa-video"></i>
+                                        </a>
+                                        @else
+                                        <a href="{{ route('user.consultation.show', $booking->consultation) }}" class="btn btn-sm btn-primary" title="Lihat Konsultasi">
+                                            <i class="fas fa-user-md"></i>
+                                        </a>
+                                        @endif
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -73,8 +88,33 @@
                 </table>
             </div>
 
-            <div class="mt-3">
-                {{ $bookings->links() }}
+            <div class="mt-3 d-flex justify-content-between align-items-center">
+                <span class="text-muted">
+                    Showing {{ $bookings->firstItem() }} to {{ $bookings->lastItem() }} of {{ $bookings->total() }} results
+                </span>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        @if ($bookings->onFirstPage())
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo; Previous</span>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $bookings->previousPageUrl() }}">&laquo; Previous</a>
+                            </li>
+                        @endif
+
+                        @if ($bookings->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $bookings->nextPageUrl() }}">Next &raquo;</a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <span class="page-link">Next &raquo;</span>
+                            </li>
+                        @endif
+                    </ul>
+                </nav>
             </div>
         @else
             <div class="text-center py-5">

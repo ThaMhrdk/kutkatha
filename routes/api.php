@@ -72,9 +72,13 @@ Route::post('/login', [AuthController::class, 'login']);
             Route::get('/consultations/{consultation}', [ConsultationController::class, 'show']);
             Route::post('/consultations/{consultation}/feedback', [ConsultationController::class, 'storeFeedback']);
 
-            // Chat (Async)
+            // Chat by Consultation
             Route::get('/consultations/{consultation}/messages', [ChatController::class, 'getMessages']);
             Route::post('/consultations/{consultation}/messages', [ChatController::class, 'sendMessage']);
+
+            // Chat by Booking (auto-create consultation)
+            Route::get('/bookings/{booking}/chat', [ChatController::class, 'getMessagesByBooking']);
+            Route::post('/bookings/{booking}/chat', [ChatController::class, 'sendMessageByBooking']);
         });
 
         /*
@@ -97,9 +101,13 @@ Route::post('/login', [AuthController::class, 'login']);
             Route::post('/consultations/{consultation}/complete', [ConsultationController::class, 'complete']);
             Route::put('/consultations/{consultation}', [ConsultationController::class, 'update']);
 
-            // Chat
+            // Chat by Consultation
             Route::get('/consultations/{consultation}/messages', [ChatController::class, 'getMessages']);
             Route::post('/consultations/{consultation}/messages', [ChatController::class, 'sendMessage']);
+
+            // Chat by Booking (auto-create consultation)
+            Route::get('/bookings/{booking}/chat', [ChatController::class, 'getMessagesByBooking']);
+            Route::post('/bookings/{booking}/chat', [ChatController::class, 'sendMessageByBooking']);
 
             // Articles
             Route::apiResource('articles', ArticleController::class)->except(['index', 'show']);

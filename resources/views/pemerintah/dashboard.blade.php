@@ -132,14 +132,29 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Trend Chart
+// Trend Chart with Real Data
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthlyData = @json($monthlyConsultations);
+
+// Get last 6 months data
+const currentMonth = new Date().getMonth(); // 0-11
+const last6MonthsLabels = [];
+const last6MonthsData = [];
+
+for (let i = 5; i >= 0; i--) {
+    let monthIndex = currentMonth - i;
+    if (monthIndex < 0) monthIndex += 12;
+    last6MonthsLabels.push(monthNames[monthIndex]);
+    last6MonthsData.push(monthlyData[monthIndex + 1] ?? 0);
+}
+
 new Chart(document.getElementById('trendChart'), {
     type: 'line',
     data: {
-        labels: {!! json_encode($chartLabels ?? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']) !!},
+        labels: last6MonthsLabels,
         datasets: [{
             label: 'Jumlah Layanan',
-            data: {!! json_encode($chartData ?? [65, 78, 90, 85, 99, 112]) !!},
+            data: last6MonthsData,
             borderColor: '#4A90A4',
             backgroundColor: 'rgba(74, 144, 164, 0.1)',
             fill: true,
@@ -153,14 +168,19 @@ new Chart(document.getElementById('trendChart'), {
     }
 });
 
-// Issue Distribution Chart
+// Issue Distribution Chart with Real Data
+const consultationsByType = @json($consultationsByType);
+const typeLabels = Object.keys(consultationsByType).length > 0 ? Object.keys(consultationsByType).map(t => t.charAt(0).toUpperCase() + t.slice(1)) : ['Belum ada data'];
+const typeData = Object.keys(consultationsByType).length > 0 ? Object.values(consultationsByType) : [1];
+const typeColors = ['#4A90A4', '#6BB5A2', '#F4A261', '#E76F51', '#9CA3AF'];
+
 new Chart(document.getElementById('issueChart'), {
     type: 'doughnut',
     data: {
-        labels: ['Kecemasan', 'Depresi', 'Stress Kerja', 'Hubungan', 'Lainnya'],
+        labels: typeLabels,
         datasets: [{
-            data: [30, 25, 20, 15, 10],
-            backgroundColor: ['#4A90A4', '#6BB5A2', '#F4A261', '#E76F51', '#9CA3AF']
+            data: typeData,
+            backgroundColor: typeColors.slice(0, typeLabels.length)
         }]
     },
     options: {

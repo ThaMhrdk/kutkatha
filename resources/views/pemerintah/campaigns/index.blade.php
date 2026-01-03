@@ -3,19 +3,7 @@
 @section('title', 'Kelola Kampanye Edukasi')
 
 @section('sidebar')
-    <div class="nav-section">Menu</div>
-    <a href="{{ route('pemerintah.dashboard') }}" class="nav-link {{ request()->routeIs('pemerintah.dashboard') ? 'active' : '' }}">
-        <i class="fas fa-tachometer-alt"></i> Dashboard
-    </a>
-    <a href="{{ route('pemerintah.reports') }}" class="nav-link {{ request()->routeIs('pemerintah.reports*') ? 'active' : '' }}">
-        <i class="fas fa-file-alt"></i> Laporan
-    </a>
-    <a href="{{ route('pemerintah.statistics') }}" class="nav-link {{ request()->routeIs('pemerintah.statistics') ? 'active' : '' }}">
-        <i class="fas fa-chart-bar"></i> Statistik
-    </a>
-    <a href="{{ route('pemerintah.campaigns.index') }}" class="nav-link {{ request()->routeIs('pemerintah.campaigns*') ? 'active' : '' }}">
-        <i class="fas fa-bullhorn"></i> Kampanye Edukasi
-    </a>
+    @include('pemerintah.partials.sidebar')
 @endsection
 
 @section('page-title', 'Kampanye Edukasi')

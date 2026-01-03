@@ -88,7 +88,7 @@
                 </table>
             </div>
 
-            {{ $bookings->links() }}
+            <x-pagination :paginator="$bookings" entityName="bookings" />
         @else
             <div class="text-center py-5">
                 <i class="fas fa-inbox fa-4x text-muted mb-3"></i>

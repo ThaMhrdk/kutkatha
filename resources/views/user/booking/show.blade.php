@@ -87,9 +87,17 @@
                     <div class="text-center py-4">
                         <i class="fas fa-spinner fa-spin fa-2x text-primary-custom mb-3"></i>
                         <p class="text-muted">Konsultasi sedang berlangsung</p>
-                        @if($booking->schedule->consultation_type == 'chat')
+                        @if($booking->schedule->type == 'chat')
                         <a href="{{ route('user.consultation.chat', $booking->consultation) }}" class="btn btn-primary">
                             <i class="fas fa-comments me-2"></i>Buka Chat
+                        </a>
+                        @elseif($booking->schedule->type == 'online')
+                        <a href="{{ route('user.consultation.chat', $booking->consultation) }}" class="btn btn-primary">
+                            <i class="fas fa-video me-2"></i>Lihat Link Meeting
+                        </a>
+                        @else
+                        <a href="{{ route('user.consultation.show', $booking->consultation) }}" class="btn btn-primary">
+                            <i class="fas fa-eye me-2"></i>Lihat Detail
                         </a>
                         @endif
                     </div>

@@ -63,20 +63,20 @@
     <div class="col-lg-6">
         <div class="card h-100">
             <div class="card-header bg-white">
-                <h5 class="mb-0">Demografi Pengguna</h5>
+                <h5 class="mb-0">Distribusi Jenis Konsultasi</h5>
             </div>
             <div class="card-body">
-                <canvas id="demographicChart" height="200"></canvas>
+                <canvas id="consultationTypeChart" height="200"></canvas>
             </div>
         </div>
     </div>
     <div class="col-lg-6">
         <div class="card h-100">
             <div class="card-header bg-white">
-                <h5 class="mb-0">Distribusi Keluhan</h5>
+                <h5 class="mb-0">Kategori Forum</h5>
             </div>
             <div class="card-body">
-                <canvas id="complaintChart" height="200"></canvas>
+                <canvas id="forumCategoryChart" height="200"></canvas>
             </div>
         </div>
     </div>
@@ -173,55 +173,32 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Demographic Chart
-new Chart(document.getElementById('demographicChart'), {
-    type: 'pie',
-    data: {
-        labels: ['18-25 tahun', '26-35 tahun', '36-45 tahun', '46+ tahun'],
-        datasets: [{
-            data: [35, 40, 18, 7],
-            backgroundColor: ['#4A90A4', '#6BB5A2', '#F4A261', '#E76F51']
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom' } }
-    }
-});
+// Usage Trend Chart with Real Data
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const yearlyData = @json($yearlyData);
 
-// Complaint Distribution Chart
-new Chart(document.getElementById('complaintChart'), {
-    type: 'bar',
-    data: {
-        labels: ['Kecemasan', 'Depresi', 'Stress', 'Hubungan', 'Karir', 'Lainnya'],
-        datasets: [{
-            data: [30, 25, 20, 12, 8, 5],
-            backgroundColor: '#4A90A4'
-        }]
-    },
-    options: {
-        indexAxis: 'y',
-        responsive: true,
-        plugins: { legend: { display: false } }
-    }
-});
+const consultationData = [];
+const newUsersData = [];
+for (let i = 1; i <= 12; i++) {
+    consultationData.push(yearlyData[i]?.consultations ?? 0);
+    newUsersData.push(yearlyData[i]?.new_users ?? 0);
+}
 
-// Usage Trend Chart
 new Chart(document.getElementById('usageChart'), {
     type: 'line',
     data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        labels: monthNames,
         datasets: [
             {
                 label: 'Konsultasi',
-                data: [65, 78, 90, 85, 99, 112],
+                data: consultationData,
                 borderColor: '#4A90A4',
                 backgroundColor: 'rgba(74, 144, 164, 0.1)',
                 fill: true
             },
             {
                 label: 'Pengguna Baru',
-                data: [30, 45, 35, 50, 42, 55],
+                data: newUsersData,
                 borderColor: '#6BB5A2',
                 backgroundColor: 'rgba(107, 181, 162, 0.1)',
                 fill: true
@@ -232,6 +209,61 @@ new Chart(document.getElementById('usageChart'), {
         responsive: true,
         plugins: { legend: { position: 'bottom' } },
         scales: { y: { beginAtZero: true } }
+    }
+});
+
+// Consultation Type Chart with Real Data
+const consultationsByType = @json($consultationsByType);
+const typeLabels = Object.keys(consultationsByType).length > 0
+    ? Object.keys(consultationsByType).map(t => {
+        const labels = {'online': 'Online', 'offline': 'Offline', 'chat': 'Chat'};
+        return labels[t] || t;
+    })
+    : ['Belum ada data'];
+const typeData = Object.keys(consultationsByType).length > 0
+    ? Object.values(consultationsByType)
+    : [1];
+
+new Chart(document.getElementById('consultationTypeChart'), {
+    type: 'pie',
+    data: {
+        labels: typeLabels,
+        datasets: [{
+            data: typeData,
+            backgroundColor: Object.keys(consultationsByType).length > 0
+                ? ['#4A90A4', '#6BB5A2', '#F4A261']
+                : ['#ccc']
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } }
+    }
+});
+
+// Forum Category Chart with Real Data
+const forumCategories = @json($forumCategories);
+const forumLabels = Object.keys(forumCategories).length > 0
+    ? Object.keys(forumCategories)
+    : ['Belum ada data'];
+const forumData = Object.keys(forumCategories).length > 0
+    ? Object.values(forumCategories)
+    : [0];
+
+new Chart(document.getElementById('forumCategoryChart'), {
+    type: 'bar',
+    data: {
+        labels: forumLabels,
+        datasets: [{
+            data: forumData,
+            backgroundColor: '#4A90A4'
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { beginAtZero: true } }
     }
 });
 </script>

@@ -16,8 +16,8 @@
                     <a href="{{ route('register', 'user') }}" class="text-decoration-none">
                         <div class="card h-100 border-2 hover-shadow">
                             <div class="card-body text-center p-5">
-                                <div class="rounded-circle bg-primary-custom bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
-                                    <i class="fas fa-user fa-3x text-primary-custom"></i>
+                                <div class="rounded-circle bg-primary-light d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
+                                    <i class="fas fa-user fa-3x text-primary"></i>
                                 </div>
                                 <h4 class="text-dark">Pengguna</h4>
                                 <p class="text-muted mb-4">
@@ -44,7 +44,7 @@
                     <a href="{{ route('register', 'psikolog') }}" class="text-decoration-none">
                         <div class="card h-100 border-2 hover-shadow">
                             <div class="card-body text-center p-5">
-                                <div class="rounded-circle bg-secondary-custom bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
+                                <div class="rounded-circle bg-secondary-light d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
                                     <i class="fas fa-user-md fa-3x text-success"></i>
                                 </div>
                                 <h4 class="text-dark">Psikolog</h4>
@@ -71,7 +71,7 @@
 
             <p class="text-center mt-4">
                 Sudah punya akun?
-                <a href="{{ route('login') }}" class="text-primary-custom fw-semibold text-decoration-none">
+                <a href="{{ route('login') }}" class="text-primary fw-semibold text-decoration-none">
                     Masuk di sini
                 </a>
             </p>

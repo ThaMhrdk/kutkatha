@@ -18,6 +18,7 @@
                 <select name="status" class="form-select">
                     <option value="">Semua Status</option>
                     <option value="ongoing" {{ request('status') == 'ongoing' ? 'selected' : '' }}>Berlangsung</option>
+                    <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>Berlangsung</option>
                     <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
                 </select>
             </div>
@@ -68,10 +69,18 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('psikolog.consultation.show', $consultation) }}"
-                                   class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-eye"></i>
-                                </a>
+                                <div class="btn-group btn-group-sm">
+                                    @if(!$consultation->isCompleted())
+                                        <a href="{{ route('psikolog.consultation.chat', $consultation) }}"
+                                           class="btn btn-primary" title="Lanjut Chat">
+                                            <i class="fas fa-comments"></i>
+                                        </a>
+                                    @endif
+                                    <a href="{{ route('psikolog.consultation.show', $consultation) }}"
+                                       class="btn btn-outline-primary" title="Detail">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -79,7 +88,7 @@
                 </table>
             </div>
 
-            {{ $consultations->links() }}
+            <x-pagination :paginator="$consultations" entityName="consultations" />
         @else
             <div class="text-center py-5">
                 <i class="fas fa-comments fa-4x text-muted mb-3"></i>

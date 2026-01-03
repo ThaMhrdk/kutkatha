@@ -105,7 +105,7 @@
                 </table>
             </div>
 
-            {{ $schedules->links() }}
+            <x-pagination :paginator="$schedules" entityName="schedules" />
         @else
             <div class="text-center py-5">
                 <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>

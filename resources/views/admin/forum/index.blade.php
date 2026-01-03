@@ -101,9 +101,17 @@
                             </td>
                             <td>{{ $topic->created_at->format('d M Y') }}</td>
                             <td>
-                                <a href="{{ route('forum.topic', $topic) }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                <a href="{{ route('forum.topic', $topic) }}" class="btn btn-sm btn-outline-primary" target="_blank" title="Lihat">
                                     <i class="fas fa-eye"></i>
                                 </a>
+                                <form action="{{ route('admin.forum.delete-topic', $topic) }}" method="POST" class="d-inline"
+                                      onsubmit="return confirm('Yakin ingin menghapus topik ini? Semua post dan komentar terkait juga akan dihapus.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach

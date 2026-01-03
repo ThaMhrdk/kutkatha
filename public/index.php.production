@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+/*
+|--------------------------------------------------------------------------
+| KONFIGURASI PATH UNTUK HOSTING
+|--------------------------------------------------------------------------
+|
+| Struktur folder di server:
+| /home/sistem18/kutkatha/        → Folder inti Laravel
+| /home/sistem18/public_html/     → Folder public (tempat file ini)
+|
+| Sesuaikan path '../kutkatha' dengan nama folder Laravel Anda di server
+|
+*/
+
+// Path ke folder Laravel (sesuaikan dengan struktur folder di server)
+$laravelPath = __DIR__.'/../kutkatha';
+
+// Determine if the application is in maintenance mode...
+if (file_exists($maintenance = $laravelPath.'/storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+// Register the Composer autoloader...
+require $laravelPath.'/vendor/autoload.php';
+
+// Bootstrap Laravel and handle the request...
+/** @var Application $app */
+$app = require_once $laravelPath.'/bootstrap/app.php';
+
+$app->handleRequest(Request::capture());

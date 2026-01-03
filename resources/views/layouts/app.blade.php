@@ -66,6 +66,18 @@
             background-color: var(--primary-color) !important;
         }
 
+        .bg-primary-light {
+            background-color: rgba(74, 144, 164, 0.1) !important;
+        }
+
+        .bg-secondary-light {
+            background-color: rgba(107, 181, 162, 0.1) !important;
+        }
+
+        .bg-warning-light {
+            background-color: rgba(245, 169, 98, 0.1) !important;
+        }
+
         .bg-secondary-custom {
             background-color: var(--secondary-color) !important;
         }
@@ -119,6 +131,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('articles.index') }}">Artikel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('campaigns.public') }}">Kampanye</a>
                     </li>
                     @auth
                     <li class="nav-item">

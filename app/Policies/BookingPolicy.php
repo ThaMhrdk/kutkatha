@@ -67,4 +67,22 @@ class BookingPolicy
             && $booking->schedule->psikolog_id === $user->psikolog->id
             && $booking->status === 'pending';
     }
+
+    /**
+     * Determine whether the user can manage the booking.
+     */
+    public function manage(User $user, Booking $booking): bool
+    {
+        // User owns the booking
+        if ($booking->user_id === $user->id) {
+            return true;
+        }
+
+        // Psikolog owns the schedule
+        if ($user->psikolog && $booking->schedule->psikolog_id === $user->psikolog->id) {
+            return true;
+        }
+
+        return false;
+    }
 }

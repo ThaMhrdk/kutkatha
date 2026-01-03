@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         // Create Pemerintah Account
         $pemerintah = User::create([
             'name' => 'Dinas Kesehatan Kukar',
-            'email' => 'dinkes@kukar.go.com',
+            'email' => 'dinkes@kutkatha.com',
             'password' => Hash::make('password'),
             'role' => 'pemerintah',
             'phone' => '0541123456',
@@ -44,8 +44,8 @@ class DatabaseSeeder extends Seeder
         // Create Psikologs
         $psikologData = [
             [
-                'name' => 'Mahardika, M.Psi',
-                'email' => 'mahardika@kutkatha.com',
+                'name' => 'Muhammad Anantha Mahardika, M.Psi',
+                'email' => 'anantha@kutkatha.com',
                 'specialization' => 'Psikologi Klinis',
                 'str_number' => 'STR-PSI-2024001',
                 'experience_years' => 8,
@@ -54,8 +54,8 @@ class DatabaseSeeder extends Seeder
                 'education' => 'S2 Psikologi Klinis - Universitas Indonesia',
             ],
             [
-                'name' => 'Andi Pratama, M.Psi',
-                'email' => 'andi.pratama@kutkatha.id',
+                'name' => 'Hani Nadia Hendra, M.Psi',
+                'email' => 'hani@kutkatha.com',
                 'specialization' => 'Psikologi Anak & Remaja',
                 'str_number' => 'STR-PSI-2024002',
                 'experience_years' => 5,
@@ -64,8 +64,8 @@ class DatabaseSeeder extends Seeder
                 'education' => 'S2 Psikologi Perkembangan - Universitas Airlangga',
             ],
             [
-                'name' => 'Dr. Maya Kusuma, M.Psi',
-                'email' => 'maya.kusuma@kutkatha.id',
+                'name' => 'Mumpuni Nur Idzati, M.Psi',
+                'email' => 'mumpuni@kutkatha.com',
                 'specialization' => 'Psikologi Keluarga',
                 'str_number' => 'STR-PSI-2024003',
                 'experience_years' => 10,
@@ -102,21 +102,16 @@ class DatabaseSeeder extends Seeder
             $this->createSchedules($psikolog);
         }
 
-        // Create Sample Users
-        for ($i = 1; $i <= 5; $i++) {
-            $email = ($i === 1) ? 'anantha@kutkatha.com' : "user{$i}@kutkatha.id";
-            $name = ($i === 1) ? 'Anantha' : "User {$i}";
-
-            User::create([
-                'name' => $name,
-                'email' => $email,
-                'password' => Hash::make('password'),
-                'role' => 'user',
-                'phone' => '08' . rand(1000000000, 9999999999),
-                'address' => 'Kutai Kartanegara, Kalimantan Timur',
-                'email_verified_at' => now(),
-            ]);
-        }
+        // Create Sample User
+        User::create([
+            'name' => 'Dika',
+            'email' => 'dika@kutkatha.com',
+            'password' => Hash::make('password'),
+            'role' => 'user',
+            'phone' => '081234567891',
+            'address' => 'Kutai Kartanegara, Kalimantan Timur',
+            'email_verified_at' => now(),
+        ]);
 
         // Create Forum Topics
         $this->createForumTopics();
@@ -128,9 +123,9 @@ class DatabaseSeeder extends Seeder
         $this->command->info('');
         $this->command->info('=== Login Credentials ===');
         $this->command->info('Admin: admin@kutkatha.com / password');
-        $this->command->info('Pemerintah: dinkes@kukar.go.com / password');
-        $this->command->info('Psikolog: mahardika@kutkatha.com / password');
-        $this->command->info('User: anantha@kutkatha.com / password');
+        $this->command->info('Pemerintah: dinkes@kutkatha.com / password');
+        $this->command->info('Psikolog: anantha@kutkatha.com / password');
+        $this->command->info('User: dika@kutkatha.com / password');
     }
 
     private function createSchedules(Psikolog $psikolog): void

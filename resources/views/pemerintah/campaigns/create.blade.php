@@ -3,19 +3,7 @@
 @section('title', 'Buat Kampanye Baru')
 
 @section('sidebar')
-    <div class="nav-section">Menu</div>
-    <a href="{{ route('pemerintah.dashboard') }}" class="nav-link">
-        <i class="fas fa-tachometer-alt"></i> Dashboard
-    </a>
-    <a href="{{ route('pemerintah.reports') }}" class="nav-link">
-        <i class="fas fa-file-alt"></i> Laporan
-    </a>
-    <a href="{{ route('pemerintah.statistics') }}" class="nav-link">
-        <i class="fas fa-chart-bar"></i> Statistik
-    </a>
-    <a href="{{ route('pemerintah.campaigns.index') }}" class="nav-link active">
-        <i class="fas fa-bullhorn"></i> Kampanye Edukasi
-    </a>
+    @include('pemerintah.partials.sidebar')
 @endsection
 
 @section('page-title', 'Buat Kampanye Baru')

@@ -58,6 +58,13 @@
 @endpush
 
 @section('content')
+{{-- Back button --}}
+<div class="mb-3">
+    <a href="{{ route('psikolog.consultation.show', $consultation) }}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Kembali ke Detail
+    </a>
+</div>
+
 <div class="row">
     <div class="col-lg-8">
         <div class="card">
@@ -74,16 +81,23 @@
                     <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#completeModal">
                         <i class="fas fa-check me-2"></i>Selesaikan
                     </button>
+                @else
+                    <span class="badge bg-success">Selesai</span>
                 @endif
             </div>
             <div class="chat-container">
                 <div class="chat-messages" id="chatMessages">
-                    @foreach($messages as $message)
+                    @forelse($messages as $message)
                     <div class="message {{ $message->sender_id == Auth::id() ? 'message-sent' : 'message-received' }}">
                         <p class="mb-1">{{ $message->message }}</p>
                         <span class="message-time">{{ $message->created_at->format('H:i') }}</span>
                     </div>
-                    @endforeach
+                    @empty
+                    <div class="text-center text-muted py-5">
+                        <i class="fas fa-comments fa-3x mb-3"></i>
+                        <p>Belum ada pesan. Mulai percakapan dengan pasien.</p>
+                    </div>
+                    @endforelse
                 </div>
 
                 @if(!$consultation->isCompleted())
@@ -99,7 +113,7 @@
                     </form>
                 </div>
                 @else
-                <div class="chat-input text-center text-muted">
+                <div class="chat-input text-center text-muted py-3">
                     <i class="fas fa-lock me-2"></i>Konsultasi telah selesai
                 </div>
                 @endif
@@ -136,6 +150,7 @@
 </div>
 
 <!-- Complete Modal -->
+@if(!$consultation->isCompleted())
 <div class="modal fade" id="completeModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -171,17 +186,22 @@
         </div>
     </div>
 </div>
+@endif
 
 @push('scripts')
 <script>
 // Scroll to bottom on load
 const chatMessages = document.getElementById('chatMessages');
-chatMessages.scrollTop = chatMessages.scrollHeight;
+if (chatMessages) {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
 
-// Auto refresh messages every 5 seconds (in real app, use WebSocket)
+// Auto refresh messages every 5 seconds for active consultations
+@if(!$consultation->isCompleted())
 setInterval(function() {
-    // location.reload();
-}, 5000);
+    location.reload();
+}, 10000);
+@endif
 </script>
 @endpush
 @endsection

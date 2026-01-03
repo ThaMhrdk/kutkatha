@@ -25,7 +25,7 @@ class ConsultationController extends Controller
 
     public function show(Consultation $consultation)
     {
-        $this->authorize('view', $consultation);
+        $this->authorize('manage', $consultation);
 
         $consultation->load(['booking.schedule.psikolog.user', 'feedback', 'chatMessages.sender']);
 
@@ -34,16 +34,19 @@ class ConsultationController extends Controller
 
     public function chat(Consultation $consultation)
     {
-        $this->authorize('view', $consultation);
+        $this->authorize('manage', $consultation);
 
         $consultation->load(['booking.schedule.psikolog.user', 'chatMessages.sender']);
 
-        return view('user.consultation.chat', compact('consultation'));
+        // Pass messages for the view
+        $messages = $consultation->chatMessages;
+
+        return view('user.consultation.chat', compact('consultation', 'messages'));
     }
 
     public function sendMessage(Request $request, Consultation $consultation)
     {
-        $this->authorize('view', $consultation);
+        $this->authorize('manage', $consultation);
 
         $request->validate([
             'message' => 'required|string|max:1000',
@@ -67,7 +70,7 @@ class ConsultationController extends Controller
 
     public function feedback(Consultation $consultation)
     {
-        $this->authorize('view', $consultation);
+        $this->authorize('manage', $consultation);
 
         if ($consultation->feedback) {
             return redirect()->route('user.consultation.show', $consultation)
@@ -81,7 +84,7 @@ class ConsultationController extends Controller
 
     public function storeFeedback(Request $request, Consultation $consultation)
     {
-        $this->authorize('view', $consultation);
+        $this->authorize('manage', $consultation);
 
         if ($consultation->feedback) {
             return back()->with('error', 'Feedback sudah diberikan.');

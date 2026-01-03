@@ -25,7 +25,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h6 class="mb-1 opacity-75">Total Pendapatan</h6>
-                    <h2 class="mb-0">{{ $totalRevenue }}</h2>
+                    <h2 class="mb-0">Rp {{ number_format($totalRevenue ?? 0, 0, ',', '.') }}</h2>
                 </div>
                 <i class="fas fa-money-bill fa-2x opacity-50"></i>
             </div>
@@ -62,38 +62,104 @@
     <div class="card-body">
         <form action="{{ route('admin.report.store') }}" method="POST" class="row g-3">
             @csrf
-            <div class="col-md-3">
-                <label class="form-label">Jenis Laporan</label>
-                <select name="type" class="form-select" required>
-                    <option value="consultations">Laporan Konsultasi</option>
-                    <option value="revenue">Laporan Pendapatan</option>
-                    <option value="users">Laporan User</option>
-                    <option value="psikologs">Laporan Psikolog</option>
-                </select>
+            <div class="col-md-4">
+                <label class="form-label">Judul Laporan</label>
+                <input type="text" name="title" class="form-control" placeholder="Laporan Bulanan Januari 2026" required>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Periode</label>
-                <select name="period" class="form-select" required>
-                    <option value="daily">Harian</option>
-                    <option value="weekly">Mingguan</option>
+            <div class="col-md-2">
+                <label class="form-label">Jenis Laporan</label>
+                <select name="report_type" class="form-select" required>
                     <option value="monthly">Bulanan</option>
-                    <option value="yearly">Tahunan</option>
+                    <option value="quarterly">Triwulan</option>
+                    <option value="annual">Tahunan</option>
                 </select>
             </div>
             <div class="col-md-2">
                 <label class="form-label">Dari Tanggal</label>
-                <input type="date" name="start_date" class="form-control" required>
+                <input type="date" name="period_start" class="form-control" required>
             </div>
             <div class="col-md-2">
                 <label class="form-label">Sampai Tanggal</label>
-                <input type="date" name="end_date" class="form-control" required>
+                <input type="date" name="period_end" class="form-control" required>
             </div>
             <div class="col-md-2 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary w-100">
                     <i class="fas fa-file-export me-2"></i>Generate
                 </button>
             </div>
+            <div class="col-12">
+                <label class="form-label">Ringkasan (Opsional)</label>
+                <textarea name="summary" class="form-control" rows="2" placeholder="Catatan tambahan untuk laporan..."></textarea>
+            </div>
         </form>
+    </div>
+</div>
+
+<!-- Daftar Laporan -->
+<div class="card mb-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">Daftar Laporan</h5>
+    </div>
+    <div class="card-body">
+        @if($reports->count() > 0)
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Judul</th>
+                        <th>Jenis</th>
+                        <th>Periode</th>
+                        <th>Konsultasi</th>
+                        <th>User Baru</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($reports as $report)
+                    <tr>
+                        <td>
+                            <strong>{{ $report->title }}</strong>
+                            <br><small class="text-muted">Dibuat: {{ $report->created_at->format('d M Y') }}</small>
+                        </td>
+                        <td>{{ $report->report_type_name }}</td>
+                        <td>{{ $report->period_start->format('d M Y') }} - {{ $report->period_end->format('d M Y') }}</td>
+                        <td>{{ $report->total_consultations }}</td>
+                        <td>{{ $report->total_users }}</td>
+                        <td>
+                            @if($report->status == 'sent')
+                                <span class="badge bg-success">Terkirim</span>
+                                <br><small class="text-muted">{{ $report->sent_at->format('d M Y H:i') }}</small>
+                            @else
+                                <span class="badge bg-warning">Draft</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('admin.report.show', $report) }}" class="btn btn-sm btn-outline-primary" title="Lihat">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            @if($report->status == 'draft')
+                            <form action="{{ route('admin.report.send', $report) }}" method="POST" class="d-inline"
+                                  onsubmit="return confirm('Kirim laporan ini ke Pemerintah?')">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-outline-success" title="Kirim ke Pemerintah">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        {{ $reports->links() }}
+        @else
+        <div class="text-center py-4">
+            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+            <p class="text-muted">Belum ada laporan. Buat laporan pertama di atas.</p>
+        </div>
+        @endif
     </div>
 </div>
 

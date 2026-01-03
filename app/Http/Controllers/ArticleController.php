@@ -54,6 +54,12 @@ class ArticleController extends Controller
             ->take(3)
             ->get();
 
-        return view('articles.show', compact('article', 'relatedArticles'));
+        $popularArticles = Article::published()
+            ->where('id', '!=', $article->id)
+            ->orderBy('views_count', 'desc')
+            ->take(5)
+            ->get();
+
+        return view('articles.show', compact('article', 'relatedArticles', 'popularArticles'));
     }
 }

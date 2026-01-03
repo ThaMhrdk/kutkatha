@@ -35,6 +35,10 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{article:slug}', [ArticleController::class, 'show'])->name('articles.show');
 
+// Public Campaigns
+Route::get('/campaigns', [HomeController::class, 'campaigns'])->name('campaigns.public');
+Route::get('/campaigns/{campaign:slug}', [HomeController::class, 'campaignShow'])->name('campaigns.public.show');
+
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
@@ -184,6 +188,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Forum Management
     Route::get('/forum', [ForumManagementController::class, 'index'])->name('forum.index');
     Route::get('/forum/posts', [ForumManagementController::class, 'posts'])->name('forum.posts');
+    Route::delete('/forum/topic/{topic}', [ForumManagementController::class, 'deleteTopic'])->name('forum.delete-topic');
     Route::delete('/forum/post/{post}', [ForumManagementController::class, 'deletePost'])->name('forum.delete-post');
     Route::delete('/forum/comment/{comment}', [ForumManagementController::class, 'deleteComment'])->name('forum.delete-comment');
     Route::get('/forum/topic/create', [ForumManagementController::class, 'createTopic'])->name('forum.create-topic');

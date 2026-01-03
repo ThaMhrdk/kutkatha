@@ -45,6 +45,24 @@ class ConsultationPolicy
     }
 
     /**
+     * Determine whether the user can manage the consultation.
+     */
+    public function manage(User $user, Consultation $consultation): bool
+    {
+        // Psikolog can manage their consultation
+        if ($user->psikolog && $consultation->booking->schedule->psikolog_id === $user->psikolog->id) {
+            return true;
+        }
+
+        // User can view and interact with their consultation
+        if ($consultation->booking->user_id === $user->id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Determine whether the user can give feedback.
      */
     public function feedback(User $user, Consultation $consultation): bool

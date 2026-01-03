@@ -22,11 +22,8 @@ class ReportController extends Controller
 
         // Statistics for cards
         $totalConsultations = Consultation::where('status', 'completed')->count();
-        // Revenue calculation - schedule consultation_fee * completed bookings
-        $totalRevenue = Booking::join('schedules', 'bookings.schedule_id', '=', 'schedules.id')
-            ->join('psikologs', 'schedules.psikolog_id', '=', 'psikologs.id')
-            ->where('bookings.status', 'confirmed')
-            ->sum('psikologs.consultation_fee');
+        // Revenue calculation - sum from payments that are paid
+        $totalRevenue = \App\Models\Payment::where('status', 'paid')->sum('amount');
         $totalUsers = User::where('role', 'user')->count();
         $totalPsikologs = Psikolog::where('verification_status', 'verified')->count();
 

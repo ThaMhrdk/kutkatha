@@ -19,15 +19,20 @@
                     <h1 class="mb-3">{{ $article->title }}</h1>
 
                     <div class="d-flex align-items-center mb-4">
-                        <img src="{{ $article->psikolog->user->photo_url }}" alt="" class="rounded-circle me-3"
+                        <img src="{{ $article->author->photo_url ?? asset('images/default-avatar.png') }}" alt="" class="rounded-circle me-3"
                              style="width: 48px; height: 48px; object-fit: cover;">
                         <div>
                             <p class="mb-0 fw-bold">
-                                {{ $article->psikolog->user->name }}
-                                <span class="badge bg-success">Psikolog</span>
+                                {{ $article->author->name ?? 'Unknown Author' }}
+                                @if($article->author && $article->author->role == 'psikolog')
+                                    <span class="badge bg-success">Psikolog</span>
+                                @endif
                             </p>
                             <small class="text-muted">
-                                {{ $article->psikolog->specialization }} • {{ $article->created_at->format('d M Y') }}
+                                @if($article->author && $article->author->psikolog)
+                                    {{ $article->author->psikolog->specialization }} •
+                                @endif
+                                {{ $article->created_at->format('d M Y') }}
                             </small>
                         </div>
                     </div>
@@ -78,22 +83,28 @@
             </article>
 
             <!-- Author Box -->
+            @if($article->author)
             <div class="card mt-4">
                 <div class="card-body">
                     <div class="d-flex">
-                        <img src="{{ $article->psikolog->user->photo_url }}" alt="" class="rounded-circle me-3"
+                        <img src="{{ $article->author->photo_url ?? asset('images/default-avatar.png') }}" alt="" class="rounded-circle me-3"
                              style="width: 80px; height: 80px; object-fit: cover;">
                         <div>
-                            <h5 class="mb-1">{{ $article->psikolog->user->name }}</h5>
-                            <p class="text-primary-custom mb-2">{{ $article->psikolog->specialization }}</p>
-                            <p class="text-muted small mb-2">{{ Str::limit($article->psikolog->bio, 150) }}</p>
-                            <a href="{{ route('user.psikolog.show', $article->psikolog) }}" class="btn btn-sm btn-outline-primary">
+                            <h5 class="mb-1">{{ $article->author->name }}</h5>
+                            @if($article->author->psikolog)
+                            <p class="text-primary-custom mb-2">{{ $article->author->psikolog->specialization }}</p>
+                            <p class="text-muted small mb-2">{{ Str::limit($article->author->psikolog->bio, 150) }}</p>
+                            <a href="{{ route('user.psikolog.show', $article->author->psikolog) }}" class="btn btn-sm btn-outline-primary">
                                 Lihat Profil
                             </a>
+                            @else
+                            <p class="text-muted small mb-2">Penulis</p>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
+            @endif
 
             <!-- Related Articles -->
             @if($relatedArticles->count() > 0)

@@ -66,7 +66,10 @@ class ConsultationController extends Controller
 
         $consultation->load(['booking.user', 'booking.schedule', 'chatMessages.sender']);
 
-        return view('psikolog.consultation.chat', compact('consultation'));
+        // Pass messages for the view
+        $messages = $consultation->chatMessages;
+
+        return view('psikolog.consultation.chat', compact('consultation', 'messages'));
     }
 
     public function sendMessage(Request $request, Consultation $consultation)

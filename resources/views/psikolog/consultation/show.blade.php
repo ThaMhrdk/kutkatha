@@ -25,56 +25,25 @@
                     {{ $consultation->booking->complaint }}
                 </div>
 
-                @if($consultation->booking->schedule->consultation_type == 'chat')
-                <a href="{{ route('psikolog.consultation.chat', $consultation) }}" class="btn btn-primary mb-4">
-                    <i class="fas fa-comments me-2"></i>Buka Chat
-                </a>
-                @endif
+                {{-- Tombol Chat selalu tersedia (untuk semua tipe konsultasi) --}}
+                <div class="d-flex gap-2 mb-4">
+                    <a href="{{ route('psikolog.consultation.chat', $consultation) }}" class="btn btn-primary">
+                        <i class="fas fa-comments me-2"></i>
+                        @if($consultation->isCompleted())
+                            Lihat Riwayat Chat
+                        @else
+                            Buka Chat
+                        @endif
+                    </a>
+                    @if(!$consultation->isCompleted())
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#completeModal">
+                            <i class="fas fa-check me-2"></i>Selesaikan
+                        </button>
+                    @endif
+                </div>
 
-                @if(!$consultation->isCompleted())
+                @if($consultation->isCompleted())
                 <hr>
-                <h5>Selesaikan Konsultasi</h5>
-                <form action="{{ route('psikolog.consultation.complete', $consultation) }}" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label class="form-label">Ringkasan Konsultasi <span class="text-danger">*</span></label>
-                        <textarea name="summary" class="form-control @error('summary') is-invalid @enderror"
-                                  rows="4" required>{{ old('summary') }}</textarea>
-                        @error('summary')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Diagnosis</label>
-                        <textarea name="diagnosis" class="form-control" rows="3">{{ old('diagnosis') }}</textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Rekomendasi <span class="text-danger">*</span></label>
-                        <textarea name="recommendation" class="form-control @error('recommendation') is-invalid @enderror"
-                                  rows="4" required>{{ old('recommendation') }}</textarea>
-                        @error('recommendation')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Catatan Tindak Lanjut</label>
-                        <textarea name="follow_up_notes" class="form-control" rows="3">{{ old('follow_up_notes') }}</textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Tanggal Sesi Berikutnya (Opsional)</label>
-                        <input type="date" name="next_session_date" class="form-control"
-                               value="{{ old('next_session_date') }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
-                    </div>
-
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-check me-2"></i>Selesaikan & Kirim Hasil
-                    </button>
-                </form>
-                @else
                 <h6 class="text-muted">Ringkasan</h6>
                 <p>{{ $consultation->summary }}</p>
 
@@ -90,7 +59,13 @@
                 <hr>
                 <h6 class="text-muted">Feedback dari Pasien</h6>
                 <div class="d-flex align-items-center mb-2">
-                    {!! $consultation->feedback->stars_html !!}
+                    @for($i = 1; $i <= 5; $i++)
+                        @if($i <= $consultation->feedback->rating)
+                            <i class="fas fa-star text-warning"></i>
+                        @else
+                            <i class="far fa-star text-warning"></i>
+                        @endif
+                    @endfor
                     <span class="ms-2">({{ $consultation->feedback->rating }}/5)</span>
                 </div>
                 @if($consultation->feedback->comment)
@@ -142,4 +117,62 @@
         </div>
     </div>
 </div>
+
+{{-- Modal Selesaikan Konsultasi --}}
+@if(!$consultation->isCompleted())
+<div class="modal fade" id="completeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="{{ route('psikolog.consultation.complete', $consultation) }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Selesaikan Konsultasi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Ringkasan Konsultasi <span class="text-danger">*</span></label>
+                        <textarea name="summary" class="form-control @error('summary') is-invalid @enderror"
+                                  rows="4" required>{{ old('summary') }}</textarea>
+                        @error('summary')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Diagnosis</label>
+                        <textarea name="diagnosis" class="form-control" rows="3">{{ old('diagnosis') }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Rekomendasi <span class="text-danger">*</span></label>
+                        <textarea name="recommendation" class="form-control @error('recommendation') is-invalid @enderror"
+                                  rows="4" required>{{ old('recommendation') }}</textarea>
+                        @error('recommendation')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Catatan Tindak Lanjut</label>
+                        <textarea name="follow_up_notes" class="form-control" rows="3">{{ old('follow_up_notes') }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal Sesi Berikutnya (Opsional)</label>
+                        <input type="date" name="next_session_date" class="form-control"
+                               value="{{ old('next_session_date') }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check me-2"></i>Selesaikan & Kirim Hasil
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
 @endsection

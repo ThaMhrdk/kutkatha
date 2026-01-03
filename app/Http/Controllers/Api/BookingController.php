@@ -167,7 +167,7 @@ class BookingController extends ApiController
                 if ($booking->payment && $booking->payment->status === 'paid') {
                     $booking->payment->update(['status' => 'refunded']);
                 } else if ($booking->payment) {
-                    $booking->payment->update(['status' => 'cancelled']);
+                    $booking->payment->update(['status' => 'failed']);
                 }
 
                 DB::commit();

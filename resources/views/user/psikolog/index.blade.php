@@ -77,9 +77,7 @@
         @endforeach
     </div>
 
-    <div class="mt-4">
-        {{ $psikologs->links() }}
-    </div>
+    <x-pagination :paginator="$psikologs" entityName="psikologs" />
 @else
     <div class="card">
         <div class="card-body text-center py-5">

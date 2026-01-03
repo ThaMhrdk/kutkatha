@@ -41,7 +41,19 @@ class ForumManagementController extends Controller
     {
         $post->delete();
 
-        return back()->with('success', 'Post dihapus.');
+        return back()->with('success', 'Post berhasil dihapus.');
+    }
+
+    public function deleteTopic(ForumTopic $topic)
+    {
+        // Delete all posts and comments associated with the topic
+        $topic->posts()->each(function ($post) {
+            $post->comments()->delete();
+        });
+        $topic->posts()->delete();
+        $topic->delete();
+
+        return back()->with('success', 'Topik dan semua post terkait berhasil dihapus.');
     }
 
     public function deleteComment(ForumComment $comment)

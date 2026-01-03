@@ -12,7 +12,7 @@
                 <div class="col-md-6">
                     <div class="card h-100">
                         <div class="card-body p-4 text-center">
-                            <div class="rounded-circle bg-primary-custom bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <div class="rounded-circle bg-primary-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
                                 <i class="fas fa-map-marker-alt fa-lg text-primary-custom"></i>
                             </div>
                             <h5>Alamat</h5>
@@ -27,7 +27,7 @@
                 <div class="col-md-6">
                     <div class="card h-100">
                         <div class="card-body p-4 text-center">
-                            <div class="rounded-circle bg-primary-custom bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <div class="rounded-circle bg-primary-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
                                 <i class="fas fa-phone fa-lg text-primary-custom"></i>
                             </div>
                             <h5>Telepon</h5>
@@ -42,7 +42,7 @@
                 <div class="col-md-6">
                     <div class="card h-100">
                         <div class="card-body p-4 text-center">
-                            <div class="rounded-circle bg-primary-custom bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <div class="rounded-circle bg-primary-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
                                 <i class="fas fa-envelope fa-lg text-primary-custom"></i>
                             </div>
                             <h5>Email</h5>
@@ -57,7 +57,7 @@
                 <div class="col-md-6">
                     <div class="card h-100">
                         <div class="card-body p-4 text-center">
-                            <div class="rounded-circle bg-primary-custom bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <div class="rounded-circle bg-primary-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
                                 <i class="fas fa-share-alt fa-lg text-primary-custom"></i>
                             </div>
                             <h5>Sosial Media</h5>

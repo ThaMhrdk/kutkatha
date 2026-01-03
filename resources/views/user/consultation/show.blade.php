@@ -54,10 +54,21 @@
                     Konsultasi sedang berlangsung. Hasil akan tersedia setelah sesi selesai.
                 </div>
 
-                @if($consultation->booking->schedule->consultation_type == 'chat')
-                <a href="{{ route('user.consultation.chat', $consultation) }}" class="btn btn-primary">
-                    <i class="fas fa-comments me-2"></i>Buka Chat
-                </a>
+                @if($consultation->booking->schedule->type == 'chat')
+                    <a href="{{ route('user.consultation.chat', $consultation) }}" class="btn btn-primary">
+                        <i class="fas fa-comments me-2"></i>Buka Chat
+                    </a>
+                @elseif($consultation->booking->schedule->type == 'online')
+                    <a href="{{ route('user.consultation.chat', $consultation) }}" class="btn btn-primary">
+                        <i class="fas fa-video me-2"></i>Lihat Link Meeting
+                    </a>
+                    <p class="text-muted small mt-2">
+                        <i class="fas fa-info-circle me-1"></i>Psikolog akan mengirimkan link Google Meet/Zoom melalui chat
+                    </p>
+                @else
+                    <div class="text-muted">
+                        <i class="fas fa-user-md me-2"></i>Konsultasi tatap muka sedang berlangsung
+                    </div>
                 @endif
                 @endif
             </div>
@@ -69,7 +80,7 @@
                 <h5 class="mb-0">Beri Feedback</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('user.consultation.feedback.store', $consultation) }}" method="POST">
+                <form action="{{ route('user.consultation.store-feedback', $consultation) }}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label class="form-label">Rating <span class="text-danger">*</span></label>

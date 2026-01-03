@@ -146,14 +146,22 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Consultation Chart
+// Consultation Chart with Real Data
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthlyData = @json($monthlyConsultations);
+
+const chartData = [];
+for (let i = 1; i <= 12; i++) {
+    chartData.push(monthlyData[i] ?? 0);
+}
+
 new Chart(document.getElementById('consultationChart'), {
     type: 'line',
     data: {
-        labels: {!! json_encode($chartLabels ?? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']) !!},
+        labels: monthNames,
         datasets: [{
             label: 'Konsultasi',
-            data: {!! json_encode($chartData ?? [12, 19, 15, 25, 22, 30]) !!},
+            data: chartData,
             borderColor: '#4A90A4',
             backgroundColor: 'rgba(74, 144, 164, 0.1)',
             fill: true,

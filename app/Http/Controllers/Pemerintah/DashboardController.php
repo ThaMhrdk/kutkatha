@@ -153,13 +153,27 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
 
+        // Consultation by type
+        $consultationsByType = Booking::selectRaw('consultation_type, COUNT(*) as count')
+            ->join('schedules', 'bookings.schedule_id', '=', 'schedules.id')
+            ->where('bookings.status', 'completed')
+            ->groupBy('consultation_type')
+            ->pluck('count', 'consultation_type')
+            ->toArray();
+
+        // Forum categories
+        $forumCategories = ForumTopic::selectRaw('category, COUNT(*) as count')
+            ->groupBy('category')
+            ->pluck('count', 'category')
+            ->toArray();
+
         return view('pemerintah.statistics', compact(
             'totalUsers', 'newUsersThisMonth',
             'totalSessions', 'newSessionsThisMonth',
             'totalArticles', 'totalArticleViews',
             'totalForumTopics', 'totalForumPosts',
             'averageRating', 'totalReviews', 'ratingDistribution',
-            'yearlyData', 'topPsikologs'
+            'yearlyData', 'topPsikologs', 'consultationsByType', 'forumCategories'
         ));
     }
 }

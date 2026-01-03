@@ -15,7 +15,7 @@
                 <div class="card-body p-5">
                     <div class="text-center mb-4">
                         @if($isUser)
-                            <i class="fas fa-user fa-3x text-primary-custom mb-3"></i>
+                            <i class="fas fa-user fa-3x text-primary mb-3"></i>
                             <h3 class="fw-bold">Daftar sebagai Pengguna</h3>
                         @else
                             <i class="fas fa-user-md fa-3x text-success mb-3"></i>

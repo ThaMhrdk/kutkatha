@@ -50,12 +50,40 @@ class BookingController extends Controller
             return back()->with('error', 'Booking tidak dapat dikonfirmasi.');
         }
 
+        if (!$booking->isPaid()) {
+            return back()->with('error', 'Pembayaran belum dilakukan.');
+        }
+
         $booking->update([
             'status' => 'confirmed',
             'confirmed_at' => now(),
         ]);
 
-        return back()->with('success', 'Booking berhasil dikonfirmasi.');
+        // Create consultation automatically
+        $consultation = \App\Models\Consultation::firstOrCreate(
+            ['booking_id' => $booking->id],
+            [
+                'status' => 'ongoing',
+                'started_at' => now(),
+            ]
+        );
+
+        // Redirect based on consultation type
+        $scheduleType = $booking->schedule->type;
+
+        if ($scheduleType === 'offline') {
+            // For offline/face-to-face, go to consultation detail
+            return redirect()->route('psikolog.consultation.show', $consultation)
+                ->with('success', 'Booking dikonfirmasi. Silakan lakukan konsultasi tatap muka.');
+        } elseif ($scheduleType === 'chat') {
+            // For chat, go directly to chat
+            return redirect()->route('psikolog.consultation.chat', $consultation)
+                ->with('success', 'Booking dikonfirmasi. Silakan mulai konsultasi chat.');
+        } else {
+            // For online (video call), go to chat to send meeting link
+            return redirect()->route('psikolog.consultation.chat', $consultation)
+                ->with('success', 'Booking dikonfirmasi. Silakan kirim link Google Meet/Zoom ke pasien.');
+        }
     }
 
     public function reject(Request $request, Booking $booking)

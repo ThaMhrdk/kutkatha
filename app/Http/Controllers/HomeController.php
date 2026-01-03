@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Psikolog;
+use App\Models\Campaign;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -21,7 +22,13 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        return view('home', compact('psikologs', 'articles'));
+        $campaigns = Campaign::active()
+            ->featured()
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('home', compact('psikologs', 'articles', 'campaigns'));
     }
 
     public function about()
@@ -32,5 +39,33 @@ class HomeController extends Controller
     public function contact()
     {
         return view('contact');
+    }
+
+    public function campaigns()
+    {
+        $campaigns = Campaign::active()
+            ->latest()
+            ->paginate(12);
+
+        $featuredCampaigns = Campaign::active()
+            ->featured()
+            ->take(3)
+            ->get();
+
+        return view('campaigns.index', compact('campaigns', 'featuredCampaigns'));
+    }
+
+    public function campaignShow(Campaign $campaign)
+    {
+        // Increment view count
+        $campaign->increment('views_count');
+
+        $relatedCampaigns = Campaign::active()
+            ->where('id', '!=', $campaign->id)
+            ->where('category', $campaign->category)
+            ->take(3)
+            ->get();
+
+        return view('campaigns.show', compact('campaign', 'relatedCampaigns'));
     }
 }
