@@ -54,7 +54,7 @@ class ArticleController extends ApiController
     {
         if ($article->status !== 'published') {
             // Only author can view unpublished articles
-            if (!Auth::check() || $article->author_id !== Auth::id()) {
+            if (!Auth::check() || (int) $article->author_id !== (int) Auth::id()) {
                 return $this->error('Artikel tidak ditemukan.', 404);
             }
         }

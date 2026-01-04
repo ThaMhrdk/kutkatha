@@ -43,8 +43,8 @@ class ConsultationController extends ApiController
         $userId = Auth::id();
         $psikolog = Auth::user()->psikolog;
 
-        $isOwner = $consultation->booking->user_id === $userId;
-        $isPsikolog = $psikolog && $consultation->booking->schedule->psikolog_id === $psikolog->id;
+        $isOwner = (int) $consultation->booking->user_id === (int) $userId;
+        $isPsikolog = $psikolog && (int) $consultation->booking->schedule->psikolog_id === (int) $psikolog->id;
 
         if (!$isOwner && !$isPsikolog) {
             return $this->error('Unauthorized.', 403);
@@ -94,7 +94,7 @@ class ConsultationController extends ApiController
     {
         $psikolog = Auth::user()->psikolog;
 
-        if ($booking->schedule->psikolog_id !== $psikolog->id) {
+        if ((int) $booking->schedule->psikolog_id !== (int) $psikolog->id) {
             return $this->error('Unauthorized.', 403);
         }
 
@@ -127,7 +127,7 @@ class ConsultationController extends ApiController
         try {
             $psikolog = Auth::user()->psikolog;
 
-            if ($consultation->booking->schedule->psikolog_id !== $psikolog->id) {
+            if ((int) $consultation->booking->schedule->psikolog_id !== (int) $psikolog->id) {
                 return $this->error('Unauthorized.', 403);
             }
 
@@ -183,7 +183,7 @@ class ConsultationController extends ApiController
         try {
             $psikolog = Auth::user()->psikolog;
 
-            if ($consultation->booking->schedule->psikolog_id !== $psikolog->id) {
+            if ((int) $consultation->booking->schedule->psikolog_id !== (int) $psikolog->id) {
                 return $this->error('Unauthorized.', 403);
             }
 
@@ -213,7 +213,7 @@ class ConsultationController extends ApiController
     public function storeFeedback(Request $request, Consultation $consultation): JsonResponse
     {
         try {
-            if ($consultation->booking->user_id !== Auth::id()) {
+            if ((int) $consultation->booking->user_id !== (int) Auth::id()) {
                 return $this->error('Unauthorized.', 403);
             }
 

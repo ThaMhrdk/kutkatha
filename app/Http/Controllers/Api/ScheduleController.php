@@ -149,7 +149,7 @@ class ScheduleController extends ApiController
     {
         $psikolog = Auth::user()->psikolog;
 
-        if ($schedule->psikolog_id !== $psikolog->id) {
+        if ((int) $schedule->psikolog_id !== (int) $psikolog->id) {
             return $this->error('Unauthorized.', 403);
         }
 
@@ -166,7 +166,7 @@ class ScheduleController extends ApiController
         try {
             $psikolog = Auth::user()->psikolog;
 
-            if ($schedule->psikolog_id !== $psikolog->id) {
+            if ((int) $schedule->psikolog_id !== (int) $psikolog->id) {
                 return $this->error('Unauthorized.', 403);
             }
 
@@ -203,7 +203,7 @@ class ScheduleController extends ApiController
     {
         $psikolog = Auth::user()->psikolog;
 
-        if ($schedule->psikolog_id !== $psikolog->id) {
+        if ((int) $schedule->psikolog_id !== (int) $psikolog->id) {
             return $this->error('Unauthorized.', 403);
         }
 

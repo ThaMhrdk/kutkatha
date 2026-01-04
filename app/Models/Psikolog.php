@@ -27,6 +27,10 @@ class Psikolog extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'experience_years' => 'integer',
+        'total_reviews' => 'integer',
         'verified_at' => 'datetime',
         'consultation_fee' => 'decimal:2',
     ];

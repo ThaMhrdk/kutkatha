@@ -18,6 +18,9 @@ class ForumPost extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'topic_id' => 'integer',
+        'user_id' => 'integer',
         'is_anonymous' => 'boolean',
         'is_best_answer' => 'boolean',
     ];

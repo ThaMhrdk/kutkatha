@@ -25,6 +25,11 @@ class Report extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'created_by' => 'integer',
+        'total_consultations' => 'integer',
+        'total_users' => 'integer',
+        'total_psikologs' => 'integer',
         'period_start' => 'date',
         'period_end' => 'date',
         'statistics' => 'array',

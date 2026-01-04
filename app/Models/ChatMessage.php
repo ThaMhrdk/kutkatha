@@ -19,6 +19,9 @@ class ChatMessage extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'consultation_id' => 'integer',
+        'sender_id' => 'integer',
         'is_read' => 'boolean',
         'read_at' => 'datetime',
     ];

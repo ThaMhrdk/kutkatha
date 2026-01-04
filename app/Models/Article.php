@@ -24,6 +24,9 @@ class Article extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'author_id' => 'integer',
+        'views_count' => 'integer',
         'published_at' => 'datetime',
     ];
 

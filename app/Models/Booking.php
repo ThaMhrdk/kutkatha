@@ -23,6 +23,9 @@ class Booking extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'schedule_id' => 'integer',
         'confirmed_at' => 'datetime',
         'cancelled_at' => 'datetime',
     ];

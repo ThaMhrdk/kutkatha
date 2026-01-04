@@ -80,7 +80,7 @@ class BookingController extends Controller
 
     public function show(Booking $booking)
     {
-        if ($booking->user_id !== Auth::id()) {
+        if ((int) $booking->user_id !== (int) Auth::id()) {
             abort(403, 'Unauthorized');
         }
 
@@ -91,7 +91,7 @@ class BookingController extends Controller
 
     public function payment(Booking $booking)
     {
-        if ($booking->user_id !== Auth::id()) {
+        if ((int) $booking->user_id !== (int) Auth::id()) {
             abort(403, 'Unauthorized');
         }
 
@@ -107,7 +107,7 @@ class BookingController extends Controller
 
     public function processPayment(Request $request, Booking $booking)
     {
-        if ($booking->user_id !== Auth::id()) {
+        if ((int) $booking->user_id !== (int) Auth::id()) {
             abort(403, 'Unauthorized');
         }
 
@@ -131,7 +131,7 @@ class BookingController extends Controller
 
     public function cancel(Booking $booking, Request $request)
     {
-        if ($booking->user_id !== Auth::id()) {
+        if ((int) $booking->user_id !== (int) Auth::id()) {
             abort(403, 'Unauthorized');
         }
 

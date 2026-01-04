@@ -124,7 +124,7 @@ class BookingController extends ApiController
     public function show(Booking $booking): JsonResponse
     {
         // Check ownership
-        if ($booking->user_id !== Auth::id()) {
+        if ((int) $booking->user_id !== (int) Auth::id()) {
             return $this->error('Unauthorized.', 403);
         }
 
@@ -139,7 +139,7 @@ class BookingController extends ApiController
     public function cancel(Request $request, Booking $booking): JsonResponse
     {
         try {
-            if ($booking->user_id !== Auth::id()) {
+            if ((int) $booking->user_id !== (int) Auth::id()) {
                 return $this->error('Unauthorized.', 403);
             }
 
@@ -190,7 +190,7 @@ class BookingController extends ApiController
     public function reschedule(Request $request, Booking $booking): JsonResponse
     {
         try {
-            if ($booking->user_id !== Auth::id()) {
+            if ((int) $booking->user_id !== (int) Auth::id()) {
                 return $this->error('Unauthorized.', 403);
             }
 
@@ -252,7 +252,7 @@ class BookingController extends ApiController
     public function processPayment(Request $request, Booking $booking): JsonResponse
     {
         try {
-            if ($booking->user_id !== Auth::id()) {
+            if ((int) $booking->user_id !== (int) Auth::id()) {
                 return $this->error('Unauthorized.', 403);
             }
 
@@ -315,7 +315,7 @@ class BookingController extends ApiController
     {
         $psikolog = Auth::user()->psikolog;
 
-        if ($booking->schedule->psikolog_id !== $psikolog->id) {
+        if ((int) $booking->schedule->psikolog_id !== (int) $psikolog->id) {
             return $this->error('Unauthorized.', 403);
         }
 
@@ -351,7 +351,7 @@ class BookingController extends ApiController
         try {
             $psikolog = Auth::user()->psikolog;
 
-            if ($booking->schedule->psikolog_id !== $psikolog->id) {
+            if ((int) $booking->schedule->psikolog_id !== (int) $psikolog->id) {
                 return $this->error('Unauthorized.', 403);
             }
 

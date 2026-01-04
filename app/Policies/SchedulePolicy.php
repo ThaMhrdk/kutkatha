@@ -28,7 +28,7 @@ class SchedulePolicy
             ? $user->psikolog
             : $user->psikolog()->first();
 
-        return $psikolog && $psikolog->id === $schedule->psikolog_id;
+        return $psikolog && (int) $psikolog->id === (int) $schedule->psikolog_id;
     }
 
     /**
@@ -58,7 +58,7 @@ class SchedulePolicy
             ? $user->psikolog
             : $user->psikolog()->first();
 
-        return $psikolog && $psikolog->id === $schedule->psikolog_id;
+        return $psikolog && (int) $psikolog->id === (int) $schedule->psikolog_id;
     }
 
     /**
@@ -71,6 +71,6 @@ class SchedulePolicy
             ? $user->psikolog
             : $user->psikolog()->first();
 
-        return $psikolog && $psikolog->id === $schedule->psikolog_id;
+        return $psikolog && (int) $psikolog->id === (int) $schedule->psikolog_id;
     }
 }

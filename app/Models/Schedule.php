@@ -20,6 +20,8 @@ class Schedule extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'psikolog_id' => 'integer',
         'date' => 'date',
         'start_time' => 'datetime',
         'end_time' => 'datetime',

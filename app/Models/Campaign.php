@@ -26,6 +26,9 @@ class Campaign extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'created_by' => 'integer',
+        'views_count' => 'integer',
         'start_date' => 'date',
         'end_date' => 'date',
         'is_featured' => 'boolean',

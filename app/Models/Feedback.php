@@ -20,6 +20,10 @@ class Feedback extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'consultation_id' => 'integer',
+        'user_id' => 'integer',
+        'rating' => 'integer',
         'is_anonymous' => 'boolean',
     ];
 

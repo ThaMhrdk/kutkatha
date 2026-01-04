@@ -22,6 +22,9 @@ class ForumTopic extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'views_count' => 'integer',
         'is_anonymous' => 'boolean',
         'is_pinned' => 'boolean',
         'is_closed' => 'boolean',

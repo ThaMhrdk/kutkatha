@@ -118,16 +118,16 @@ class ChatController extends ApiController
      */
     private function canAccessBooking(Booking $booking): bool
     {
-        $userId = Auth::id();
+        $userId = (int) Auth::id();
         $psikolog = Auth::user()->psikolog;
 
         // User owns the booking
-        if ($booking->user_id === $userId) {
+        if ((int) $booking->user_id === $userId) {
             return true;
         }
 
         // Psikolog owns the schedule
-        if ($psikolog && $booking->schedule->psikolog_id === $psikolog->id) {
+        if ($psikolog && (int) $booking->schedule->psikolog_id === (int) $psikolog->id) {
             return true;
         }
 
@@ -215,16 +215,16 @@ class ChatController extends ApiController
      */
     private function canAccessConsultation(Consultation $consultation): bool
     {
-        $userId = Auth::id();
+        $userId = (int) Auth::id();
         $psikolog = Auth::user()->psikolog;
 
         // User owns the booking
-        if ($consultation->booking->user_id === $userId) {
+        if ((int) $consultation->booking->user_id === $userId) {
             return true;
         }
 
         // Psikolog owns the schedule
-        if ($psikolog && $consultation->booking->schedule->psikolog_id === $psikolog->id) {
+        if ($psikolog && (int) $consultation->booking->schedule->psikolog_id === (int) $psikolog->id) {
             return true;
         }
 

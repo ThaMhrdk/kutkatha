@@ -19,6 +19,10 @@ class ForumComment extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'post_id' => 'integer',
+        'user_id' => 'integer',
+        'parent_id' => 'integer',
         'is_anonymous' => 'boolean',
         'is_psikolog_answer' => 'boolean',
     ];

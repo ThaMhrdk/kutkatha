@@ -14,12 +14,12 @@ class ConsultationPolicy
     public function view(User $user, Consultation $consultation): bool
     {
         // User owns the booking
-        if ($consultation->booking->user_id === $user->id) {
+        if ((int) $consultation->booking->user_id === (int) $user->id) {
             return true;
         }
 
         // Psikolog owns the schedule
-        if ($user->psikolog && $consultation->booking->schedule->psikolog_id === $user->psikolog->id) {
+        if ($user->psikolog && (int) $consultation->booking->schedule->psikolog_id === (int) $user->psikolog->id) {
             return true;
         }
 
@@ -37,7 +37,7 @@ class ConsultationPolicy
     public function update(User $user, Consultation $consultation): bool
     {
         // Only psikolog can update consultation
-        if ($user->psikolog && $consultation->booking->schedule->psikolog_id === $user->psikolog->id) {
+        if ($user->psikolog && (int) $consultation->booking->schedule->psikolog_id === (int) $user->psikolog->id) {
             return true;
         }
 
@@ -50,12 +50,12 @@ class ConsultationPolicy
     public function manage(User $user, Consultation $consultation): bool
     {
         // Psikolog can manage their consultation
-        if ($user->psikolog && $consultation->booking->schedule->psikolog_id === $user->psikolog->id) {
+        if ($user->psikolog && (int) $consultation->booking->schedule->psikolog_id === (int) $user->psikolog->id) {
             return true;
         }
 
         // User can view and interact with their consultation
-        if ($consultation->booking->user_id === $user->id) {
+        if ((int) $consultation->booking->user_id === (int) $user->id) {
             return true;
         }
 
@@ -68,7 +68,7 @@ class ConsultationPolicy
     public function feedback(User $user, Consultation $consultation): bool
     {
         // Only the booking owner can give feedback
-        return $consultation->booking->user_id === $user->id
+        return (int) $consultation->booking->user_id === (int) $user->id
             && $consultation->status === 'completed'
             && !$consultation->feedback;
     }

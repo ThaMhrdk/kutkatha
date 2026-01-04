@@ -22,6 +22,8 @@ class Consultation extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
+        'booking_id' => 'integer',
         'next_session_date' => 'date',
         'started_at' => 'datetime',
         'ended_at' => 'datetime',
